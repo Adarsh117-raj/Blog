@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Customer Churn Prediction Dashboard — a data analytics and machine learning project by Adarsh Raj.">
+  <title>Customer Churn Prediction | Adarsh Raj</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#080d18;--panel:#101a2b;--panel2:#142238;--line:#263750;--text:#edf4ff;--muted:#9aabc2;--cyan:#5eead4;--blue:#75a7ff;--purple:#b8a2ff;--orange:#ffbd7a}
+    *{box-sizing:border-box;scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 80% 0%,#152642 0,transparent 34%),var(--bg);color:var(--text);font-family:Manrope, sans-serif;line-height:1.7}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+    header{position:sticky;top:0;z-index:10;background:#080d18d9;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff12}
+    nav{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;letter-spacing:-.5px}.brand span{color:var(--cyan)}
+    .navlinks{display:flex;gap:25px;color:var(--muted);font-size:13px}.navlinks a:hover{color:var(--cyan)}
+    .menu{display:none;background:none;color:var(--text);border:1px solid var(--line);padding:8px 12px;border-radius:9px}
+    .hero{padding:105px 0 80px;display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center}
+    .eyebrow{font:12px 'DM Mono';letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
+    h1{font-size:clamp(42px,6vw,70px);line-height:1.08;letter-spacing:-3px;margin:18px 0}
+    h1 em{font-style:normal;color:var(--cyan)}.lead{max-width:650px;color:var(--muted);font-size:17px}
+    .actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:30px}.btn{padding:12px 18px;border-radius:10px;font-weight:800;font-size:13px;border:1px solid var(--line);display:inline-block}
+    .btn.primary{background:var(--cyan);color:#06201e;border-color:var(--cyan)}.btn:hover{transform:translateY(-2px)}
+    .hero-card{border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#172943,#0e1727);padding:25px;box-shadow:0 25px 80px #0005}
+    .card-top{display:flex;justify-content:space-between;color:var(--muted);font:11px 'DM Mono';letter-spacing:1px}
+    .signal{height:190px;margin:20px 0 10px;display:flex;align-items:end;gap:9px;border-bottom:1px solid var(--line);padding:0 8px}
+    .signal i{display:block;flex:1;border-radius:6px 6px 0 0;background:linear-gradient(0deg,#287d85,var(--cyan));opacity:.9}
+    .signal i:nth-child(1){height:34%}.signal i:nth-child(2){height:51%}.signal i:nth-child(3){height:44%}.signal i:nth-child(4){height:75%}.signal i:nth-child(5){height:62%}.signal i:nth-child(6){height:88%}.signal i:nth-child(7){height:70%}.signal i:nth-child(8){height:96%}
+    .hero-stat{display:flex;justify-content:space-between;align-items:center}.hero-stat strong{font-size:30px}.hero-stat small{color:var(--muted)}
+    section{padding:72px 0;border-top:1px solid #ffffff0d}.section-head{max-width:700px;margin-bottom:32px}
+    .kicker{font:11px 'DM Mono';color:var(--cyan);letter-spacing:2px;text-transform:uppercase}
+    h2{font-size:clamp(28px,4vw,42px);letter-spacing:-1.5px;line-height:1.2;margin:10px 0 12px}
+    .section-head p,.muted{color:var(--muted)}
+    .grid{display:grid;gap:16px}.two{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}
+    .panel{background:linear-gradient(145deg,var(--panel),#0d1625);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .panel h3{margin:5px 0 8px;font-size:17px}.panel p{color:var(--muted);font-size:14px;margin:0}
+    .number{font-size:32px;font-weight:800;letter-spacing:-1px;color:var(--cyan)}.label{font:11px 'DM Mono';color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .tech{display:flex;flex-wrap:wrap;gap:10px}.chip{padding:9px 13px;border:1px solid var(--line);border-radius:99px;color:#dce8fa;background:#111d30;font-size:13px}
+    .steps{counter-reset:step}.step{position:relative;padding-left:62px;min-height:65px;margin:0 0 22px}.step:before{counter-increment:step;content:counter(step,decimal-leading-zero);position:absolute;left:0;top:0;color:var(--cyan);font:14px 'DM Mono';border:1px solid var(--line);padding:9px;border-radius:10px}
+    .step h3{margin:0 0 4px;font-size:16px}.step p{margin:0;color:var(--muted);font-size:14px}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.metric{background:#0b1422;border:1px solid var(--line);border-radius:13px;padding:17px}.metric strong{display:block;font-size:27px;color:var(--cyan)}.metric span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .chartbox{height:280px;position:relative}.chartbox canvas{max-height:280px}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font:11px 'DM Mono';text-transform:uppercase;letter-spacing:1px}
+    .notice{border-left:3px solid var(--orange);padding:15px 18px;background:#ffbd7a0c;color:#d8e1ef;border-radius:0 10px 10px 0;font-size:13px;margin-top:20px}
+    .future li{margin:12px 0;color:var(--muted);padding-left:5px}.future li::marker{color:var(--cyan)}
+    footer{padding:35px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .top{position:fixed;right:22px;bottom:22px;background:var(--cyan);color:#06201e;border-radius:50%;width:42px;height:42px;display:grid;place-items:center;font-weight:900}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:75px}.four,.metric-grid{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.navlinks{display:none;position:absolute;top:72px;left:0;right:0;padding:18px 22px;background:#080d18;flex-direction:column;border-bottom:1px solid var(--line)}.navlinks.open{display:flex}.menu{display:block}.two,.three,.four,.metric-grid{grid-template-columns:1fr}.wrap{width:min(100% - 30px,1120px)}.hero{padding:60px 0}.lead{font-size:15px}h1{letter-spacing:-2px}.chartbox{height:240px}}
+  </style>
+</head>
+<body>
+<header><nav class="wrap">
+  <a class="brand" href="#home">AR<span>.</span> PROJECTS</a>
+  <div class="navlinks" id="navlinks"><a href="#about">About</a><a href="#technology">Technology</a><a href="#workflow">Workflow</a><a href="#results">Results</a><a href="#future">Future Scope</a></div>
+  <button class="menu" id="menu" aria-label="Toggle navigation">Menu</button>
+</nav></header>
+
+<main id="home">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Data Analytics · Machine Learning</div>
+      <h1>Customer Churn<br><em>Prediction</em> Dashboard</h1>
+      <p class="lead">Turning customer data into understandable churn insights. An educational machine learning project that explores customer behaviour, evaluates a Random Forest model and presents individual risk predictions in an interactive dashboard.</p>
+      <div class="actions"><a class="btn primary" href="#about">Explore the project ↓</a><a class="btn" href="#results">View model results</a></div>
+      <p class="muted" style="font-size:13px;margin-top:28px">Adarsh Raj · 25MCI10354 · MCA, 3rd Semester<br>Chandigarh University · 2025–2027</p>
+    </div>
+    <div class="hero-card">
+      <div class="card-top"><span>CHURN ANALYTICS / OVERVIEW</span><span>MODEL 01</span></div>
+      <div class="signal" aria-label="Decorative data bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="hero-stat"><div><small>Test accuracy</small><br><strong>66.8%</strong></div><div style="text-align:right"><small>Training records</small><br><strong>1,600</strong></div></div>
+    </div>
+  </div>
+
+  <section id="about"><div class="wrap">
+    <div class="section-head"><div class="kicker">01 / Project overview</div><h2>Why predict customer churn?</h2><p>Subscription businesses lose recurring revenue when customers leave. Churn prediction aims to identify customers who may be at risk early enough for a business to consider retention actions, such as a discount or a longer contract.</p></div>
+    <div class="grid two">
+      <article class="panel"><h3>Problem statement</h3><p>Spreadsheets can show averages, but they do not provide an individual risk score. This project builds a free, easy-to-run tool that analyses customer data, highlights factors associated with churn and presents an individual prediction in a clear dashboard.</p></article>
+      <article class="panel"><h3>Project objectives</h3><p>Generate customer records, explore churn patterns, train a Random Forest classifier, evaluate it with standard metrics and present the analysis through an interactive Streamlit dashboard.</p></article>
+    </div>
+    <div class="grid four" style="margin-top:16px">
+      <div class="panel"><div class="number">2,000</div><div class="label">Synthetic customers</div></div>
+      <div class="panel"><div class="number">7</div><div class="label">Dataset columns</div></div>
+      <div class="panel"><div class="number">3</div><div class="label">Dashboard tabs</div></div>
+      <div class="panel"><div class="number">200</div><div class="label">Decision trees</div></div>
+    </div>
+  </div></section>
+
+  <section id="technology"><div class="wrap">
+    <div class="section-head"><div class="kicker">02 / Technology stack</div><h2>Tools behind the project</h2><p>Each tool supports one stage of the workflow, from generating records and preparing data to model training and interactive visualisation.</p></div>
+    <div class="tech">
+      <span class="chip">Python 3.10+</span><span class="chip">Pandas</span><span class="chip">NumPy</span><span class="chip">Scikit-learn</span><span class="chip">Random Forest</span><span class="chip">Plotly Express</span><span class="chip">Streamlit</span><span class="chip">CSV</span><span class="chip">Visual Studio Code</span>
+    </div>
+    <div class="grid three" style="margin-top:22px">
+      <article class="panel"><h3>Data preparation</h3><p>NumPy generates synthetic customer records. Pandas loads the CSV, groups data for analysis and applies one-hot encoding to categorical fields.</p></article>
+      <article class="panel"><h3>Machine learning</h3><p>Scikit-learn provides the Random Forest classifier, train-test split and evaluation metrics such as accuracy, precision, recall and confusion matrix.</p></article>
+      <article class="panel"><h3>Dashboard & charts</h3><p>Streamlit builds the browser interface with tabs and input controls. Plotly Express creates interactive charts and the confusion-matrix heat map.</p></article>
+    </div>
+  </div></section>
+
+  <section id="workflow"><div class="wrap">
+    <div class="section-head"><div class="kicker">03 / System workflow</div><h2>From raw records to churn risk</h2><p>The system follows a simple three-stage architecture: data generation, analytics and presentation.</p></div>
+    <div class="grid two">
+      <div class="panel steps">
+        <div class="step"><h3>Generate the dataset</h3><p>A Python script creates 2,000 synthetic customer records and saves them in customers.csv.</p></div>
+        <div class="step"><h3>Load and encode data</h3><p>Pandas loads the CSV. Contract and internet categories are converted into numeric columns using one-hot encoding.</p></div>
+        <div class="step"><h3>Split and train</h3><p>The dataset is split into 80% training data (1,600 records) and 20% test data (400 records). A Random Forest with 200 trees is trained.</p></div>
+        <div class="step"><h3>Evaluate the model</h3><p>The model predicts the test set. Accuracy, confusion matrix and feature importance are calculated.</p></div>
+        <div class="step"><h3>Explore and predict</h3><p>The dashboard displays charts and metrics, then accepts one customer's details to estimate churn probability.</p></div>
+      </div>
+      <div class="panel">
+        <div class="label">Data flow</div>
+        <div style="display:grid;gap:9px;margin-top:15px;text-align:center">
+          <div class="chip">generate_data.py</div><div class="muted">↓</div>
+          <div class="chip">customers.csv</div><div class="muted">↓</div>
+          <div class="chip">Pandas analysis & encoding</div><div class="muted">↓</div>
+          <div class="chip">Random Forest training</div><div class="muted">↓</div>
+          <div class="chip">Streamlit dashboard</div><div class="muted">↓</div>
+          <div class="grid two"><div class="chip">Charts & metrics</div><div class="chip">Customer prediction</div></div>
+        </div>
+        <div class="notice">A probability of 50% or more is labelled high risk in this prototype. This threshold is defined in the project code and is not an official industry standard.</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="results"><div class="wrap">
+    <div class="section-head"><div class="kicker">04 / Model performance</div><h2>What did the model achieve?</h2><p>The report records the results from 400 test customers. The model identified about three out of four customers who actually churned.</p></div>
+    <div class="metric-grid">
+      <div class="metric"><strong>66.8%</strong><span>Accuracy</span></div><div class="metric"><strong>68.4%</strong><span>Precision · churn</span></div><div class="metric"><strong>73.6%</strong><span>Recall · churn</span></div><div class="metric"><strong>70.9%</strong><span>F1-score · churn</span></div>
+    </div>
+    <div class="grid two">
+      <div class="panel"><h3>Model evaluation</h3><div class="chartbox"><canvas id="metricsChart" aria-label="Model metrics chart"></canvas></div></div>
+      <div class="panel"><h3>Feature importance</h3><div class="chartbox"><canvas id="featureChart" aria-label="Feature importance chart"></canvas></div></div>
+    </div>
+    <div class="panel" style="margin-top:16px"><h3>Confusion matrix</h3><table><thead><tr><th></th><th>Predicted: Stay</th><th>Predicted: Churn</th></tr></thead><tbody><tr><td>Actual: Stay</td><td>105</td><td>75</td></tr><tr><td>Actual: Churn</td><td>58</td><td>162</td></tr></tbody></table></div>
+    <div class="notice">Important context: the dataset is synthetic and its churn labels include random noise. The reported 66.8% accuracy is a learning result, not evidence that the model is validated for a real telecom company.</div>
+  </div></section>
+
+  <section id="insights"><div class="wrap">
+    <div class="section-head"><div class="kicker">05 / Exploratory findings</div><h2>Patterns observed in the dataset</h2><p>The report found differences in churn rates across contract types and internet services, as well as tenure, support calls and monthly charges.</p></div>
+    <div class="grid two">
+      <div class="panel"><h3>Churn by contract type</h3><div class="chartbox"><canvas id="contractChart" aria-label="Churn by contract chart"></canvas></div></div>
+      <div class="panel"><h3>Churn by internet service</h3><div class="chartbox"><canvas id="internetChart" aria-label="Churn by internet chart"></canvas></div></div>
+    </div>
+    <div class="grid three" style="margin-top:16px">
+      <div class="panel"><div class="label">Average tenure</div><h3>40.5 vs 31.5 months</h3><p>Customers who stayed had an average tenure of 40.5 months; churned customers averaged 31.5 months.</p></div>
+      <div class="panel"><div class="label">Support calls</div><h3>1.72 vs 2.26 calls</h3><p>Average support calls were higher among customers who churned.</p></div>
+      <div class="panel"><div class="label">Monthly charges</div><h3>₹854 vs ₹942</h3><p>Average monthly charges were higher for customers who churned.</p></div>
+    </div>
+  </div></section>
+
+  <section id="future"><div class="wrap">
+    <div class="section-head"><div class="kicker">06 / Limitations & future scope</div><h2>A prototype that can grow</h2><p>The current version demonstrates the complete workflow, while the report identifies clear next steps before it could be considered for real-world use.</p></div>
+    <div class="grid two">
+      <div class="panel"><h3>Current limitations</h3><ul class="future">
+        <li>Uses synthetic data rather than records from a real company.</li><li>Moderate accuracy; no hyperparameter tuning or cross-validation.</li><li>Uses only Random Forest, without comparison to other algorithms.</li><li>No login, database or automatic data refresh.</li><li>Predicts one customer at a time.</li><li>Real customer information would require secure handling, permission and fairness checks.</li>
+      </ul></div>
+      <div class="panel"><h3>Planned improvements</h3><ul class="future">
+        <li>Use a real dataset such as the Telco Customer Churn dataset.</li><li>Compare Logistic Regression, XGBoost and other models with cross-validation.</li><li>Apply grid search for tuning and address class imbalance.</li><li>Add SHAP values to explain individual predictions.</li><li>Support CSV upload for bulk prediction and downloadable high-risk lists.</li><li>Add SQL database storage and user login.</li><li>Deploy the dashboard to a cloud service for team access.</li>
+      </ul></div>
+    </div>
+  </div></section>
+
+  <section id="conclusion"><div class="wrap">
+    <div class="section-head"><div class="kicker">07 / Conclusion</div><h2>Making data easier to act on</h2><p>The Customer Churn Prediction Dashboard demonstrates an end-to-end data analytics and machine learning workflow: creating data, exploring patterns, training a classifier, evaluating results and presenting predictions through an interactive interface. The analysis linked month-to-month contracts, shorter tenure, fibre service, higher charges and more support calls with higher churn in the synthetic dataset.</p><p>Before applying this approach to a real business, it would need real customer data, careful validation and tuning, model comparison, and a review of privacy and fairness.</p></div>
+    <div class="panel"><div class="label">Project author</div><h3 style="font-size:22px;margin:8px 0">Adarsh Raj</h3><p>MCA, 3rd Semester · UID: 25MCI10354<br>Department of Computer Applications · Chandigarh University<br>Project guide: Mr. Sanjay Kumar Aggarwal</p></div>
+  </div></section>
+
+  <section id="references"><div class="wrap">
+    <div class="section-head"><div class="kicker">08 / References</div><h2>Documentation & resources</h2></div>
+    <div class="grid two">
+      <div class="panel"><p><a href="https://scikit-learn.org/" target="_blank" rel="noopener">Scikit-learn documentation ↗</a></p><p><a href="https://docs.streamlit.io/" target="_blank" rel="noopener">Streamlit documentation ↗</a></p><p><a href="https://plotly.com/python/" target="_blank" rel="noopener">Plotly Python ↗</a></p><p><a href="https://pandas.pydata.org/docs/" target="_blank" rel="noopener">Pandas documentation ↗</a></p></div>
+      <div class="panel"><p><a href="https://numpy.org/doc/" target="_blank" rel="noopener">NumPy documentation ↗</a></p><p><a href="https://www.kaggle.com/" target="_blank" rel="noopener">Kaggle datasets ↗</a></p><p><a href="https://www.anthropic.com/" target="_blank" rel="noopener">Anthropic ↗</a></p></div>
+    </div>
+  </div></section>
+</main>
+<footer><div class="wrap foot"><span>© 2026 Adarsh Raj · Customer Churn Prediction Dashboard</span><span>Built with HTML, CSS & JavaScript · Chandigarh University</span></div></footer>
+<a class="top" href="#home" aria-label="Back to top">↑</a>
+<script>
+  const menu=document.getElementById('menu'), links=document.getElementById('navlinks');
+  menu.addEventListener('click',()=>links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+  Chart.defaults.color='#9aabc2';Chart.defaults.borderColor='#263750';Chart.defaults.font.family='Manrope';
+  const common={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,boxWidth:8}}}};
+  new Chart(document.getElementById('metricsChart'),{type:'bar',data:{labels:['Accuracy','Precision','Recall','F1-score'],datasets:[{label:'Score (%)',data:[66.8,68.4,73.6,70.9],backgroundColor:['#5eead4','#75a7ff','#b8a2ff','#ffbd7a'],borderRadius:7}]},options:{...common,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});
+  new Chart(document.getElementById('featureChart'),{type:'bar',data:{labels:['Tenure','Monthly charges','Age','Support calls','Month-to-month'],datasets:[{label:'Importance (%)',data:[24.5,24.5,19.7,9.9,9.3],backgroundColor:'#75a7ff',borderRadius:6}]},options:{...common,indexAxis:'y',scales:{x:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}});
+  new Chart(document.getElementById('contractChart'),{type:'bar',data:{labels:['Month-to-month','One year','Two year'],datasets:[{label:'Churn rate (%)',data:[71.3,40.2,26.4],backgroundColor:['#ffbd7a','#75a7ff','#5eead4'],borderRadius:7}]},options:{...common,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});
+  new Chart(document.getElementById('internetChart'),{type:'bar',data:{labels:['Fiber','DSL','No Internet'],datasets:[{label:'Churn rate (%)',data:[62.8,49.3,46.7],backgroundColor:['#b8a2ff','#75a7ff','#5eead4'],borderRadius:7}]},options:{...common,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});
+</script>
+</body>
+</html>
